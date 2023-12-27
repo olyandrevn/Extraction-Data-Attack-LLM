@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import torch
 import zlib
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import evaluate
 
