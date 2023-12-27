@@ -46,7 +46,7 @@ class BaseExperiment:
         self.perplexity = evaluate.load("perplexity", module_type="metric")
                 
     def setup(self):
-        self.f_log.write(f"using device: {self.device}\n")
+        self.f_log.write(f"using device: {self.args.device}\n")
         self.f_log.write("Loading Models...\n\n")
         
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -59,7 +59,7 @@ class BaseExperiment:
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.args.checkpoint, 
-            token=self.args.access_token).to(self.device)
+            token=self.args.access_token).to(self.args.device)
         self.model.eval()
         self.f_log.write("Model loading is done!\n\n")
 
@@ -71,10 +71,10 @@ class BaseExperiment:
 
     def generate_sequences(self, prompts):
         input_len = 1
-        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(self.device)
+        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(self.args.device)
         outputs = self.model.generate(
-            input_ids=inputs['input_ids'].to(self.device),
-            attention_mask=inputs['attention_mask'].to(self.device),
+            input_ids=inputs['input_ids'].to(self.args.device),
+            attention_mask=inputs['attention_mask'].to(self.args.device),
             max_length=input_len+self.args.seq_len,
             do_sample=True,
             top_k=self.args.top_k,
