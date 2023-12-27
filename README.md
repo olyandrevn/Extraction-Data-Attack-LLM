@@ -21,7 +21,7 @@ It should include
 ## Install
 
 ```sh
-git clone [git@github.com:olyandrevn/Octopack-LLM.git](https://github.com/olyandrevn/Extraction-Data-Attack-LLM.git)
+git clone https://github.com/olyandrevn/Extraction-Data-Attack-LLM.git
 ```
 OR
 
