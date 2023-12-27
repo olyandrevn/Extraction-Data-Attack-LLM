@@ -25,7 +25,7 @@ def main():
     )
     experiment = FullExperiment(
         filelog=args.filelog,
-        filetable=args.filetable, 
+        filetable=args.full_filetable, 
         args=experiment_args,
     )
     experiment.setup()
