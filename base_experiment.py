@@ -6,11 +6,9 @@ import pandas as pd
 import os
 import torch
 import zlib
-from tqdm.auto import tqdm
+from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import evaluate
-
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class BaseExperimentArgs:
@@ -36,7 +34,7 @@ class BaseExperimentArgs:
 class BaseExperiment:
     def __init__(self, filelog, filetable, args : BaseExperimentArgs):
         self.args = args
-        self.f_log = open(filelog, 'w')
+        self.filelog= filelog
         self.filetable = filetable
         self.model_ppl = f"{self.args.model_name}_PPL"
 
@@ -46,8 +44,9 @@ class BaseExperiment:
         self.perplexity = evaluate.load("perplexity", module_type="metric")
                 
     def setup(self):
-        self.f_log.write(f"using device: {self.args.device}\n")
-        self.f_log.write("Loading Models...\n\n")
+        with open(self.filelog, 'a') as f:
+            f.write(f"using device: {self.args.device}\n")
+            f.write("Loading Models...\n\n")
         
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.args.checkpoint,
@@ -61,7 +60,8 @@ class BaseExperiment:
             self.args.checkpoint, 
             token=self.args.access_token).to(self.args.device)
         self.model.eval()
-        self.f_log.write("Model loading is done!\n\n")
+        with open(self.filelog, 'a') as f:
+            f.write("Model loading is done!\n\n")
 
         self.samples = []
         self.scores = {
@@ -81,8 +81,9 @@ class BaseExperiment:
             top_p=self.args.top_p)
         return self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
         
-    def run(self):      
-        self.f_log.write("Start experiment...\n\n")
+    def run(self):
+        with open(self.filelog, 'a') as f:
+            f.write("Start experiment...\n\n")
         num_batches = int(np.ceil(self.args.N / self.args.batch_size))
         
         with tqdm(total=self.args.N) as pbar:
@@ -108,4 +109,6 @@ class BaseExperiment:
                 df.to_csv(self.filetable, mode='a', header=False, index=False)
         
                 pbar.update(self.args.batch_size)
-        self.f_log.write("Experiment done!\n\n")
+                
+        with open(self.filelog, 'a') as f:
+            f.write("Experiment done!\n\n")

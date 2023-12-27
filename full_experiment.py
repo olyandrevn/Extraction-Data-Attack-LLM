@@ -6,14 +6,15 @@ import os
 import torch
 import evaluate
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class FullExperimentArgs:
     def __init__(self,
                  base_filetable,
-                 checkpoint="bigcode/starcoderbase-3b"):
+                 checkpoint="bigcode/starcoderbase-3b",
+                 device='cpu'):
         self.base_filetable = base_filetable
         self.checkpoint = checkpoint
+        self.device = device
         self.model_name = os.path.split(checkpoint)[1]
 
 class FullExperiment:
@@ -27,7 +28,7 @@ class FullExperiment:
                 
     def setup(self):
         with open(self.filelog, 'a') as f:
-            f.write(f"using device: {device}\n")
+            f.write(f"using device: {self.args.device}\n")
         
     def run(self):
         df = pd.read_csv(self.args.base_filetable)

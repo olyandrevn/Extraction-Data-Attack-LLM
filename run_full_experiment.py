@@ -1,4 +1,5 @@
 import sys
+import torch
 from argparse import ArgumentParser
 
 from full_experiment import FullExperiment, FullExperimentArgs
@@ -16,9 +17,11 @@ def parse_arguments(argv):
 
 
 def main():
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     experiment_args = FullExperimentArgs(
         base_filetable=args.base_filetable,
         checkpoint=args.checkpoint,
+        device=device
     )
     experiment = FullExperiment(
         filelog=args.filelog,
