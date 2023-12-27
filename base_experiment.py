@@ -10,7 +10,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import evaluate
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 class BaseExperimentArgs:
@@ -21,7 +21,8 @@ class BaseExperimentArgs:
                  top_k=40,
                  top_p=1.0, 
                  checkpoint="bigcode/starcoderbase-1b", 
-                 access_token='<token>'):
+                 access_token='<token>',
+                 device='cpu'):
         self.N = N
         self.batch_size = batch_size
         self.seq_len = seq_len
@@ -30,6 +31,7 @@ class BaseExperimentArgs:
         self.checkpoint = checkpoint
         self.model_name = os.path.split(checkpoint)[1]
         self.access_token = access_token
+        self.device = device
 
 class BaseExperiment:
     def __init__(self, filelog, filetable, args : BaseExperimentArgs):
@@ -44,7 +46,7 @@ class BaseExperiment:
         self.perplexity = evaluate.load("perplexity", module_type="metric")
                 
     def setup(self):
-        self.f_log.write(f"using device: {device}\n")
+        self.f_log.write(f"using device: {self.device}\n")
         self.f_log.write("Loading Models...\n\n")
         
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -57,7 +59,7 @@ class BaseExperiment:
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.args.checkpoint, 
-            token=self.args.access_token).to(device)
+            token=self.args.access_token).to(self.device)
         self.model.eval()
         self.f_log.write("Model loading is done!\n\n")
 
@@ -69,10 +71,10 @@ class BaseExperiment:
 
     def generate_sequences(self, prompts):
         input_len = 1
-        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(device)
+        inputs = self.tokenizer(prompts, return_tensors="pt", padding=True).to(self.device)
         outputs = self.model.generate(
-            input_ids=inputs['input_ids'].to(device),
-            attention_mask=inputs['attention_mask'].to(device),
+            input_ids=inputs['input_ids'].to(self.device),
+            attention_mask=inputs['attention_mask'].to(self.device),
             max_length=input_len+self.args.seq_len,
             do_sample=True,
             top_k=self.args.top_k,
