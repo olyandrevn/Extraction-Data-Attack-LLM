@@ -19,7 +19,6 @@ class BaseExperimentArgs:
                  top_k=40,
                  top_p=1.0, 
                  checkpoint="bigcode/starcoderbase-1b", 
-                 access_token='<token>',
                  device='cpu'):
         self.N = N
         self.batch_size = batch_size
@@ -28,7 +27,6 @@ class BaseExperimentArgs:
         self.top_p = top_p
         self.checkpoint = checkpoint
         self.model_name = os.path.split(checkpoint)[1]
-        self.access_token = access_token
         self.device = device
 
 class BaseExperiment:
@@ -50,15 +48,14 @@ class BaseExperiment:
         
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.args.checkpoint,
-            token=self.args.access_token,
         )
             
         self.tokenizer.padding_side = "left"
         self.tokenizer.pad_token = self.tokenizer.eos_token
 
         self.model = AutoModelForCausalLM.from_pretrained(
-            self.args.checkpoint, 
-            token=self.args.access_token).to(self.args.device)
+            self.args.checkpoint
+        ).to(self.args.device)
         self.model.eval()
         with open(self.filelog, 'a') as f:
             f.write("Model loading is done!\n\n")

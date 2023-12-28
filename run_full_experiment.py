@@ -21,7 +21,7 @@ def main():
     experiment_args = FullExperimentArgs(
         base_filetable=args.base_filetable,
         checkpoint=args.checkpoint,
-        device=device
+        device=device,
     )
     experiment = FullExperiment(
         filelog=args.filelog,
