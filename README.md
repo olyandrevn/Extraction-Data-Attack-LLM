@@ -25,7 +25,7 @@ git clone https://github.com/olyandrevn/Extraction-Data-Attack-LLM.git
 ```
 OR
 
-Copy notebook in Google Colab and run all cells there (on GPU).
+Copy [notebook in Google Colab](https://colab.research.google.com/github/olyandrevn/Extraction-Data-Attack-LLM/blob/main/ExtractingTrainingDataTask.ipynb) and run all cells there (on GPU).
 
 ## Usage
 
@@ -36,7 +36,7 @@ python3 run_full_experiment.py
 
 OR
 
-Copy notebook in Google Colab and run all cells there (on GPU).
+Copy [notebook in Google Colab](https://colab.research.google.com/github/olyandrevn/Extraction-Data-Attack-LLM/blob/main/ExtractingTrainingDataTask.ipynb) and run all cells there (on GPU).
 
 ## Author
 
