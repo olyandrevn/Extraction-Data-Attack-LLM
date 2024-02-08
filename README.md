@@ -37,10 +37,3 @@ python3 run_full_experiment.py
 OR
 
 Copy [notebook in Google Colab](https://colab.research.google.com/github/olyandrevn/Extraction-Data-Attack-LLM/blob/main/ExtractingTrainingDataTask.ipynb) and run all cells there (on GPU).
-
-## Author
-
-👤 **Olga Kolomyttseva**
-
-* Github: [@olyandrevn](https://github.com/olyandrevn)
-* LinkedIn: [@olyandrevn](https://linkedin.com/in/olyandrevn)
